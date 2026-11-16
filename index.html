@@ -210,9 +210,9 @@
 
       const cloudMaterial = new THREE.MeshPhongMaterial({
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.34,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending: THREE.NormalBlending,
         color: 0xc9d8ff
       });
       const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.744, 80, 80), cloudMaterial);
@@ -349,7 +349,10 @@
           velocityX *= 0.94;
           velocityY *= 0.94;
         }
-        clouds.rotation.y += delta * 0.012;
+        // Cloud systems drift independently over the rotating surface.
+        // The faster relative spin makes their motion visible without looking mechanical.
+        clouds.rotation.y += delta * 0.032;
+        clouds.rotation.x = Math.sin(clock.elapsedTime * 0.11) * 0.009;
         stars.rotation.y += delta * 0.002;
         renderer.render(scene, camera);
       };
