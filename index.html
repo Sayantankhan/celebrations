@@ -218,8 +218,12 @@
       const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.744, 80, 80), cloudMaterial);
       earthRoot.add(clouds);
 
+      // A restrained Fresnel rim: thin at the limb, almost invisible over the face.
       const atmosphereMaterial = new THREE.ShaderMaterial({
-        uniforms: { glowColor: { value: new THREE.Color(0x4b83ff) } },
+        uniforms: {
+          glowColor: { value: new THREE.Color(0x5b91c9) },
+          sunDirection: { value: new THREE.Vector3(-0.6, 0.35, 0.72).normalize() }
+        },
         vertexShader: `
           varying vec3 vNormal;
           varying vec3 vViewPosition;
@@ -232,19 +236,24 @@
         `,
         fragmentShader: `
           uniform vec3 glowColor;
+          uniform vec3 sunDirection;
           varying vec3 vNormal;
           varying vec3 vViewPosition;
           void main() {
-            float intensity = pow(0.72 - dot(normalize(vNormal), normalize(vViewPosition)), 3.0);
-            gl_FragColor = vec4(glowColor, intensity * 0.72);
+            vec3 N = normalize(vNormal);
+            vec3 V = normalize(vViewPosition);
+            float rim = pow(1.0 - max(dot(N, V), 0.0), 4.2);
+            float daylight = 0.22 + 0.78 * max(dot(N, normalize(sunDirection)), 0.0);
+            float alpha = rim * daylight * 0.20;
+            gl_FragColor = vec4(glowColor, alpha);
           }
         `,
-        side: THREE.BackSide,
+        side: THREE.FrontSide,
         blending: THREE.AdditiveBlending,
         transparent: true,
         depthWrite: false
       });
-      const atmosphere = new THREE.Mesh(new THREE.SphereGeometry(1.86, 80, 80), atmosphereMaterial);
+      const atmosphere = new THREE.Mesh(new THREE.SphereGeometry(1.755, 96, 96), atmosphereMaterial);
       earthRoot.add(atmosphere);
 
       const starCount = window.innerWidth < 600 ? 900 : 1700;
