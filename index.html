@@ -3,19 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#030611">
+  <meta name="theme-color" content="#05080b">
   <meta name="description" content="Something good is taking shape. Stay tuned.">
+  <meta property="og:title" content="Coming Soon">
+  <meta property="og:description" content="Something good is taking shape. Stay tuned.">
+  <meta property="og:type" content="website">
   <title>Coming Soon</title>
   <style>
-    :root { color-scheme: dark; --ink: #f5f6ff; --muted: #a4abc4; }
+    :root {
+      color-scheme: dark;
+      --ink: #f4f3ef;
+      --muted: rgba(225, 229, 229, .62);
+      --line: rgba(226, 232, 232, .16);
+      --serif: "Iowan Old Style", "Baskerville", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
     * { box-sizing: border-box; }
     html, body { width: 100%; min-height: 100%; margin: 0; }
     body {
       min-height: 100svh;
       overflow: hidden;
-      background: #030611;
+      background: #05080b;
       color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
     .scene {
       position: relative;
@@ -26,351 +38,583 @@
       min-height: 100svh;
       overflow: hidden;
       background:
-        radial-gradient(ellipse at 50% 47%, rgba(20, 39, 91, .32), transparent 42%),
-        radial-gradient(ellipse at 50% 110%, rgba(24, 39, 84, .28), transparent 55%),
-        #030611;
+        radial-gradient(ellipse 46% 42% at 50% 43%, rgba(104, 119, 120, .12), transparent 72%),
+        radial-gradient(ellipse 70% 54% at 50% 112%, rgba(57, 69, 69, .13), transparent 74%),
+        #05080b;
+    }
+    .scene::before,
+    .scene::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      pointer-events: none;
+    }
+    .scene::before {
+      inset: 0;
+      opacity: .32;
+      background-image: radial-gradient(rgba(231, 238, 232, .19) .55px, transparent .7px);
+      background-size: 4px 4px;
+      mask-image: linear-gradient(to bottom, transparent 4%, #000 38%, #000 80%, transparent);
+    }
+    .scene::after {
+      width: min(74vw, 940px);
+      aspect-ratio: 1;
+      top: 3%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(205, 218, 212, .035);
+      border-radius: 50%;
+      box-shadow: 0 0 0 68px rgba(205, 218, 212, .012), 0 0 0 136px rgba(205, 218, 212, .008);
     }
     #space {
       position: absolute;
       inset: 0;
-      z-index: -1;
+      z-index: 0;
+      display: block;
       width: 100%;
       height: 100%;
-      display: block;
-      touch-action: pan-y;
+      touch-action: none;
       cursor: grab;
       outline: none;
     }
     #space:active { cursor: grabbing; }
+    #space:focus-visible {
+      outline: 1px solid rgba(224, 233, 228, .7);
+      outline-offset: -8px;
+    }
+    .topline {
+      position: absolute;
+      z-index: 3;
+      top: max(26px, env(safe-area-inset-top));
+      left: clamp(22px, 4.2vw, 64px);
+      right: clamp(22px, 4.2vw, 64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(232, 236, 230, .7);
+      pointer-events: none;
+    }
+    .wordmark,
+    .edition {
+      margin: 0;
+      font-size: 9px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    .wordmark { color: rgba(245, 244, 237, .84); }
+    .edition {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(218, 226, 219, .48);
+      letter-spacing: .18em;
+    }
+    .edition::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #a8b6a6;
+      box-shadow: 0 0 12px rgba(168, 182, 166, .45);
+      content: "";
+    }
     .vignette {
       position: absolute;
+      z-index: 1;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
-      background: radial-gradient(ellipse at center, transparent 35%, rgba(2, 4, 12, .25) 72%, rgba(2, 4, 12, .72) 120%);
+      background:
+        linear-gradient(to bottom, rgba(2, 5, 7, .24), transparent 22%, transparent 62%, rgba(2, 5, 7, .78) 100%),
+        radial-gradient(ellipse at center, transparent 40%, rgba(1, 3, 5, .34) 82%, rgba(1, 3, 5, .7) 120%);
     }
     .content {
       position: absolute;
       z-index: 2;
-      left: 20px;
-      right: 20px;
-      bottom: max(8vh, 54px);
+      right: 22px;
+      bottom: max(8.4vh, 62px);
+      left: 22px;
       text-align: center;
       pointer-events: none;
-      animation: arrive 1.2s cubic-bezier(.2,.75,.25,1) both;
-      text-shadow: 0 2px 24px rgba(0, 0, 0, .65);
+      animation: arrive 1.25s cubic-bezier(.2, .72, .22, 1) both;
     }
     .eyebrow {
-      margin: 0 0 18px;
-      color: #b7c4ee;
-      font-size: 10px;
-      font-weight: 650;
-      letter-spacing: .38em;
+      margin: 0 0 17px;
+      color: rgba(211, 221, 211, .72);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .34em;
+      line-height: 1.6;
       text-transform: uppercase;
     }
     h1 {
       margin: 0;
-      font-size: clamp(38px, 8vw, 78px);
-      line-height: .98;
-      font-weight: 650;
-      letter-spacing: -.065em;
-      background: linear-gradient(110deg, #fff 12%, #d4dcff 46%, #94a9f4 72%, #fff 94%);
-      background-size: 220% auto;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      animation: shimmer 8s linear infinite;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: clamp(48px, 7.3vw, 92px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .92;
+      text-shadow: 0 4px 38px rgba(0, 0, 0, .4);
     }
     .rule {
-      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      margin: 22px auto 16px;
+      color: rgba(206, 218, 207, .54);
+    }
+    .rule::before,
+    .rule::after {
+      width: 34px;
       height: 1px;
-      margin: 25px auto 18px;
-      background: linear-gradient(90deg, transparent, #aabaff, transparent);
+      background: linear-gradient(90deg, transparent, rgba(205, 219, 207, .52));
+      content: "";
+    }
+    .rule::after { transform: scaleX(-1); }
+    .rule span {
+      width: 4px;
+      height: 4px;
+      border: 1px solid rgba(210, 222, 211, .72);
+      transform: rotate(45deg);
     }
     .sub {
       margin: 0;
-      color: #b2b8ce;
-      font-size: clamp(13px, 2vw, 15px);
-      letter-spacing: .025em;
+      color: rgba(222, 227, 220, .66);
+      font-family: var(--serif);
+      font-size: clamp(14px, 1.55vw, 17px);
+      font-style: italic;
+      letter-spacing: .015em;
     }
     .hint {
       position: absolute;
       z-index: 2;
-      left: 0;
-      right: 0;
-      bottom: max(24px, env(safe-area-inset-bottom));
+      right: 20px;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       margin: 0;
-      color: rgba(194, 204, 235, .58);
-      font-size: 10px;
-      letter-spacing: .16em;
+      color: rgba(203, 214, 205, .42);
+      font-size: 8px;
+      font-weight: 550;
+      letter-spacing: .2em;
       text-align: center;
       text-transform: uppercase;
       pointer-events: none;
-      animation: fade 1.5s .8s both;
+      animation: fade-in 1.4s .7s both;
     }
-    .load-error {
+    .hint-mark {
+      position: relative;
+      width: 15px;
+      height: 15px;
+      border: 1px solid rgba(205, 218, 207, .4);
+      border-radius: 50%;
+    }
+    .hint-mark::after {
+      position: absolute;
+      top: 3px;
+      left: 6px;
+      width: 2px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(220, 230, 220, .8);
+      content: "";
+    }
+    .fallback {
       position: absolute;
       z-index: 1;
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      color: rgba(210, 218, 244, .55);
-      font-size: 11px;
-      text-align: center;
-      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      width: min(62vw, 410px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      transform: translate(-50%, -60%);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(187, 199, 188, .22), transparent 8%),
+        radial-gradient(circle at 38% 36%, #627a78 0, #263d40 34%, #142328 61%, #091115 74%, transparent 75%);
+      box-shadow: inset -28px -12px 46px rgba(0, 0, 0, .7), 0 0 70px rgba(153, 174, 160, .08);
+      opacity: .8;
     }
-    @keyframes arrive { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes shimmer { to { background-position: 220% center; } }
+    .is-ready .fallback { display: none; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     @media (max-width: 600px) {
-      .content { bottom: max(10vh, 76px); }
-      .eyebrow { font-size: 9px; letter-spacing: .28em; margin-bottom: 14px; }
-      .rule { margin: 19px auto 14px; }
-      .hint { font-size: 9px; letter-spacing: .12em; }
+      .scene::after {
+        top: 10%;
+        width: 112vw;
+        box-shadow: 0 0 0 38px rgba(205, 218, 212, .01), 0 0 0 76px rgba(205, 218, 212, .006);
+      }
+      .topline { top: max(22px, env(safe-area-inset-top)); }
+      .wordmark, .edition { font-size: 8px; letter-spacing: .17em; }
+      .content {
+        bottom: max(11vh, 84px);
+        left: 16px;
+        right: 16px;
+      }
+      .eyebrow { margin-bottom: 14px; font-size: 8px; letter-spacing: .25em; }
+      h1 { font-size: clamp(46px, 12vw, 66px); }
+      .rule { margin: 18px auto 13px; }
+      .sub { font-size: 15px; }
+      .hint { font-size: 7px; letter-spacing: .15em; }
+      .fallback { width: 88vw; }
     }
-    @media (max-height: 620px) and (orientation: landscape) {
-      .content { bottom: 28px; }
-      .eyebrow { margin-bottom: 10px; }
-      .rule { margin: 12px auto; }
+    @media (max-height: 650px) and (orientation: landscape) {
+      .topline { top: 16px; }
+      .content { bottom: 44px; }
+      .eyebrow { margin-bottom: 8px; }
+      h1 { font-size: clamp(38px, 7vh, 58px); }
+      .rule { margin: 11px auto 8px; }
+      .sub { font-size: 13px; }
       .hint { display: none; }
+      .scene::after { top: -20%; width: 70vh; }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="scene">
-    <canvas id="space" aria-label="Interactive three-dimensional Earth. Drag to rotate the globe."></canvas>
+  <main class="scene" id="scene">
+    <div class="fallback" aria-hidden="true"></div>
+    <canvas id="space" tabindex="0" role="img" aria-label="Interactive three-dimensional Earth. Drag to rotate the globe, or use the arrow keys."></canvas>
+    <header class="topline" aria-label="Page identity">
+      <p class="wordmark">Celebrations</p>
+      <p class="edition">A new chapter</p>
+    </header>
     <div class="vignette" aria-hidden="true"></div>
-    <section class="content" aria-label="Coming soon">
+    <section class="content" aria-labelledby="page-title">
       <p class="eyebrow">A little something is on its way</p>
-      <h1>COMING SOON</h1>
-      <div class="rule" aria-hidden="true"></div>
+      <h1 id="page-title">COMING SOON</h1>
+      <div class="rule" aria-hidden="true"><span></span></div>
       <p class="sub">Something good is taking shape. Stay tuned.</p>
     </section>
-    <p class="hint">Drag to explore · The world is turning</p>
-    <p class="load-error" id="load-error" hidden>For the best experience, enable WebGL in your browser.</p>
+    <p class="hint"><span class="hint-mark" aria-hidden="true"></span>Drag to explore · The world is turning</p>
+    <p class="sr-only" id="globe-status" aria-live="polite">Loading the interactive Earth.</p>
   </main>
 
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
     const canvas = document.querySelector('#space');
-    const errorMessage = document.querySelector('#load-error');
+    const sceneElement = document.querySelector('#scene');
+    const status = document.querySelector('#globe-status');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isSmallScreen = window.matchMedia('(max-width: 600px)').matches;
 
-    try {
-      const renderer = new THREE.WebGLRenderer({
-        canvas,
-        antialias: window.devicePixelRatio < 2,
-        alpha: true,
-        powerPreference: 'high-performance'
-      });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.12;
+    let renderer;
+    let animationFrame = 0;
+    let isVisible = !document.hidden;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let earthRoot;
+    let clouds;
+    let stars;
+    let clock;
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 6.8);
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.setCrossOrigin('anonymous');
 
-      const earthRoot = new THREE.Group();
-      scene.add(earthRoot);
-
-      const ambient = new THREE.AmbientLight(0x9eafd9, 1.15);
-      scene.add(ambient);
-      const sun = new THREE.DirectionalLight(0xfff1dc, 2.8);
-      sun.position.set(-4, 2.5, 5);
-      scene.add(sun);
-      const rimLight = new THREE.DirectionalLight(0x477bff, 1.35);
-      rimLight.position.set(4, -1.5, -3);
-      scene.add(rimLight);
-
-      const loader = new THREE.TextureLoader();
-      loader.setCrossOrigin('anonymous');
-      const loadTexture = (url, color = false) => new Promise((resolve, reject) => {
-        loader.load(url, texture => {
-          if (color) texture.colorSpace = THREE.SRGBColorSpace;
+    function loadTexture(url, colorSpace = null) {
+      return new Promise((resolve, reject) => {
+        textureLoader.load(url, texture => {
+          if (colorSpace) texture.colorSpace = colorSpace;
+          texture.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 1;
           resolve(texture);
         }, undefined, reject);
       });
+    }
 
-      const earthUrl = 'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg';
-      const cloudUrl = 'https://threejs.org/examples/textures/planets/earth_clouds_1024.png';
+    function makeStars() {
+      const count = isSmallScreen ? 650 : 1250;
+      const positions = new Float32Array(count * 3);
+      let seed = 173;
+      const random = () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+      };
+      for (let i = 0; i < count; i++) {
+        const radius = 13 + random() * 32;
+        const theta = random() * Math.PI * 2;
+        const z = random() * 2 - 1;
+        const ring = Math.sqrt(1 - z * z);
+        positions[i * 3] = radius * ring * Math.cos(theta);
+        positions[i * 3 + 1] = radius * z;
+        positions[i * 3 + 2] = radius * ring * Math.sin(theta);
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const material = new THREE.PointsMaterial({
+        color: 0xd8dfd7,
+        size: isSmallScreen ? 0.027 : 0.032,
+        transparent: true,
+        opacity: 0.48,
+        sizeAttenuation: true,
+        depthWrite: false
+      });
+      stars = new THREE.Points(geometry, material);
+      scene.add(stars);
+    }
 
-      const earthGeometry = new THREE.SphereGeometry(1.72, 96, 96);
+    let scene;
+    let camera;
+
+    function renderOnce() {
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    function resize() {
+      if (!renderer || !camera || !earthRoot) return;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, width < 600 ? 1.35 : 1.6);
+      renderer.setPixelRatio(pixelRatio);
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.fov = width < 600 ? 39 : 34;
+      camera.position.z = width < 600 ? 7.8 : width < 900 ? 7.25 : 6.9;
+      camera.updateProjectionMatrix();
+
+      const scale = width < 390 ? 0.79 : width < 600 ? 0.86 : width < 900 ? 0.98 : 1.06;
+      earthRoot.scale.setScalar(scale);
+      earthRoot.position.set(0, width < 600 ? 0.74 : 0.57, 0);
+      renderOnce();
+    }
+
+    function startLoop() {
+      if (animationFrame || !isVisible || !renderer) return;
+      clock.start();
+      const animate = () => {
+        animationFrame = requestAnimationFrame(animate);
+        const delta = Math.min(clock.getDelta(), 0.04);
+
+        if (!dragging) {
+          if (!reducedMotion) earthRoot.rotation.y += delta * 0.075;
+          earthRoot.rotation.y += velocityX;
+          earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x + velocityY, -0.52, 0.52);
+          velocityX *= 0.94;
+          velocityY *= 0.94;
+        }
+
+        if (!reducedMotion) {
+          clouds.rotation.y += delta * 0.018;
+          clouds.rotation.x = Math.sin(clock.elapsedTime * 0.075) * 0.004;
+          stars.rotation.y += delta * 0.0007;
+        }
+
+        renderer.render(scene, camera);
+      };
+      animate();
+    }
+
+    function stopLoop() {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      if (clock) clock.stop();
+    }
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: !isSmallScreen && (window.devicePixelRatio || 1) <= 1.5,
+        alpha: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.08;
+      renderer.setClearColor(0x05080b, 0);
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(34, 1, 0.1, 120);
+      camera.position.set(0, 0, 6.9);
+
+      earthRoot = new THREE.Group();
+      earthRoot.rotation.z = THREE.MathUtils.degToRad(23.4);
+      scene.add(earthRoot);
+
+      const hemisphere = new THREE.HemisphereLight(0xdce7e0, 0x111b20, 0.72);
+      scene.add(hemisphere);
+
+      const keyLight = new THREE.DirectionalLight(0xfff4e4, 2.25);
+      keyLight.position.set(-4.5, 2.8, 5.5);
+      scene.add(keyLight);
+
+      const softFill = new THREE.DirectionalLight(0x8caaa2, 0.32);
+      softFill.position.set(4, -1.5, 3);
+      scene.add(softFill);
+
+      const earthGeometry = new THREE.SphereGeometry(1.72, 128, 128);
       const earthMaterial = new THREE.MeshPhongMaterial({
-        shininess: 12,
-        specular: new THREE.Color(0x34466e)
+        color: 0xffffff,
+        shininess: 15,
+        specular: new THREE.Color(0x263a3b)
       });
       const earth = new THREE.Mesh(earthGeometry, earthMaterial);
       earthRoot.add(earth);
 
       const cloudMaterial = new THREE.MeshPhongMaterial({
+        color: 0xe9eee9,
         transparent: true,
-        opacity: 0.34,
+        opacity: 0.27,
         depthWrite: false,
         blending: THREE.NormalBlending,
-        color: 0xc9d8ff
+        shininess: 4
       });
-      const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.744, 80, 80), cloudMaterial);
+      clouds = new THREE.Mesh(
+        new THREE.SphereGeometry(1.733, 112, 112),
+        cloudMaterial
+      );
       earthRoot.add(clouds);
 
-      // A restrained Fresnel rim: thin at the limb, almost invisible over the face.
+      // A restrained, neutral atmospheric limb — no blue cast or oversized outer halo.
       const atmosphereMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-          glowColor: { value: new THREE.Color(0x5b91c9) },
-          sunDirection: { value: new THREE.Vector3(-0.6, 0.35, 0.72).normalize() }
-        },
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec3 vViewPosition;
-          void main() {
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            vNormal = normalize(normalMatrix * normal);
-            vViewPosition = -mvPosition.xyz;
-            gl_Position = projectionMatrix * mvPosition;
-          }
-        `,
-        fragmentShader: `
-          uniform vec3 glowColor;
-          uniform vec3 sunDirection;
-          varying vec3 vNormal;
-          varying vec3 vViewPosition;
-          void main() {
-            vec3 N = normalize(vNormal);
-            vec3 V = normalize(vViewPosition);
-            float rim = pow(1.0 - max(dot(N, V), 0.0), 4.2);
-            float daylight = 0.22 + 0.78 * max(dot(N, normalize(sunDirection)), 0.0);
-            float alpha = rim * daylight * 0.20;
-            gl_FragColor = vec4(glowColor, alpha);
-          }
-        `,
+        uniforms: { glowColor: { value: new THREE.Color(0xc2d5d0) } },
+        vertexShader: [
+          'varying vec3 vNormal;',
+          'varying vec3 vViewPosition;',
+          'void main() {',
+          '  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);',
+          '  vNormal = normalize(normalMatrix * normal);',
+          '  vViewPosition = -mvPosition.xyz;',
+          '  gl_Position = projectionMatrix * mvPosition;',
+          '}'
+        ].join('\n'),
+        fragmentShader: [
+          'uniform vec3 glowColor;',
+          'varying vec3 vNormal;',
+          'varying vec3 vViewPosition;',
+          'void main() {',
+          '  vec3 N = normalize(vNormal);',
+          '  vec3 V = normalize(vViewPosition);',
+          '  float rim = pow(1.0 - max(dot(N, V), 0.0), 3.7);',
+          '  float alpha = rim * 0.105;',
+          '  gl_FragColor = vec4(glowColor, alpha);',
+          '}'
+        ].join('\n'),
         side: THREE.FrontSide,
         blending: THREE.AdditiveBlending,
         transparent: true,
         depthWrite: false
       });
-      const atmosphere = new THREE.Mesh(new THREE.SphereGeometry(1.755, 96, 96), atmosphereMaterial);
+      const atmosphere = new THREE.Mesh(
+        new THREE.SphereGeometry(1.752, 112, 112),
+        atmosphereMaterial
+      );
       earthRoot.add(atmosphere);
 
-      const starCount = window.innerWidth < 600 ? 900 : 1700;
-      const starPositions = new Float32Array(starCount * 3);
-      for (let i = 0; i < starCount; i++) {
-        const radius = 12 + Math.random() * 34;
-        const theta = Math.random() * Math.PI * 2;
-        const z = (Math.random() * 2) - 1;
-        const ring = Math.sqrt(1 - z * z);
-        starPositions[i * 3] = radius * ring * Math.cos(theta);
-        starPositions[i * 3 + 1] = radius * z;
-        starPositions[i * 3 + 2] = radius * ring * Math.sin(theta);
-      }
-      const starGeometry = new THREE.BufferGeometry();
-      starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-      const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({
-        color: 0xc8d5ff, size: 0.045, transparent: true, opacity: 0.78, sizeAttenuation: true
-      }));
-      scene.add(stars);
+      makeStars();
+      clock = new THREE.Clock();
 
-      const moon = new THREE.Mesh(
-        new THREE.SphereGeometry(0.075, 24, 24),
-        new THREE.MeshStandardMaterial({ color: 0x9ba7c4, roughness: 1, metalness: 0 })
-      );
-      moon.position.set(2.65, 1.15, -1.8);
-      scene.add(moon);
-
-      const [earthTexture, cloudTexture] = await Promise.all([
-        loadTexture(earthUrl, true),
-        loadTexture(cloudUrl, true).catch(() => null)
+      const textureBase = 'https://threejs.org/examples/textures/planets/';
+      const [dayMap, normalMap, specularMap, cloudMap] = await Promise.all([
+        loadTexture(textureBase + 'earth_atmos_2048.jpg', THREE.SRGBColorSpace),
+        loadTexture(textureBase + 'earth_normal_2048.jpg'),
+        loadTexture(textureBase + 'earth_specular_2048.jpg'),
+        loadTexture(textureBase + 'earth_clouds_1024.png', THREE.SRGBColorSpace).catch(() => null)
       ]);
-      earthMaterial.map = earthTexture;
+
+      earthMaterial.map = dayMap;
+      earthMaterial.normalMap = normalMap;
+      earthMaterial.normalScale.set(0.22, 0.22);
+      earthMaterial.specularMap = specularMap;
       earthMaterial.needsUpdate = true;
-      if (cloudTexture) {
-        cloudMaterial.map = cloudTexture;
-        cloudMaterial.needsUpdate = true;
+
+      if (cloudMap) {
+        clouds.material.map = cloudMap;
+        clouds.material.needsUpdate = true;
       }
 
-      let width = 0, height = 0;
-      const resize = () => {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        renderer.setSize(width, height, false);
-        camera.aspect = width / height;
-        camera.position.z = width < 600 ? 7.5 : width < 900 ? 7.1 : 6.8;
-        camera.fov = width < 600 ? 39 : 34;
-        camera.updateProjectionMatrix();
-        const globeScale = width < 420 ? 0.82 : width < 600 ? 0.9 : width < 900 ? 1 : 1.08;
-        earthRoot.scale.setScalar(globeScale);
-        earthRoot.position.y = width < 600 ? 0.62 : 0.48;
-      };
+      sceneElement.classList.add('is-ready');
+      status.textContent = 'Interactive Earth ready. Drag to rotate the globe, or use the arrow keys.';
       resize();
-      window.addEventListener('resize', resize, { passive: true });
-
-      let dragging = false;
-      let lastX = 0;
-      let lastY = 0;
-      let velocityX = 0;
-      let velocityY = 0;
-
-      canvas.addEventListener('pointerdown', event => {
-        dragging = true;
-        lastX = event.clientX;
-        lastY = event.clientY;
-        velocityX = velocityY = 0;
-        canvas.setPointerCapture(event.pointerId);
-      });
-      canvas.addEventListener('pointermove', event => {
-        if (!dragging) return;
-        const dx = event.clientX - lastX;
-        const dy = event.clientY - lastY;
-        earthRoot.rotation.y += dx * 0.006;
-        earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x + dy * 0.004, -0.65, 0.65);
-        velocityX = dx * 0.0008;
-        velocityY = dy * 0.0005;
-        lastX = event.clientX;
-        lastY = event.clientY;
-      });
-      const release = () => { dragging = false; };
-      canvas.addEventListener('pointerup', release);
-      canvas.addEventListener('pointercancel', release);
-      canvas.addEventListener('lostpointercapture', release);
-
-      const clock = new THREE.Clock();
-      let animationFrame = 0;
-      const animate = () => {
-        animationFrame = requestAnimationFrame(animate);
-        const delta = Math.min(clock.getDelta(), 0.04);
-        if (!dragging) {
-          if (!reducedMotion) earthRoot.rotation.y += delta * 0.105;
-          earthRoot.rotation.y += velocityX;
-          earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x + velocityY, -0.65, 0.65);
-          velocityX *= 0.94;
-          velocityY *= 0.94;
-        }
-        // Cloud systems drift independently over the rotating surface.
-        // The faster relative spin makes their motion visible without looking mechanical.
-        clouds.rotation.y += delta * 0.032;
-        clouds.rotation.x = Math.sin(clock.elapsedTime * 0.11) * 0.009;
-        stars.rotation.y += delta * 0.002;
-        renderer.render(scene, camera);
-      };
-      animate();
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          cancelAnimationFrame(animationFrame);
-          clock.stop();
-        } else {
-          clock.start();
-          animate();
-        }
-      });
+      startLoop();
     } catch (error) {
-      console.error('3D Earth could not be initialized:', error);
-      errorMessage.hidden = false;
+      console.error('The interactive Earth could not be initialized:', error);
+      status.textContent = 'The Earth visualization is unavailable in this browser. The page message remains available.';
+      if (renderer) {
+        renderer.dispose();
+        renderer = null;
+      }
     }
+
+    canvas.addEventListener('pointerdown', event => {
+      if (!earthRoot) return;
+      dragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      velocityX = 0;
+      velocityY = 0;
+      canvas.setPointerCapture(event.pointerId);
+    });
+
+    canvas.addEventListener('pointermove', event => {
+      if (!dragging || !earthRoot) return;
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      earthRoot.rotation.y += dx * 0.0055;
+      earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x + dy * 0.0038, -0.52, 0.52);
+      velocityX = dx * 0.00055;
+      velocityY = dy * 0.00035;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      renderOnce();
+    });
+
+    const releasePointer = () => { dragging = false; };
+    canvas.addEventListener('pointerup', releasePointer);
+    canvas.addEventListener('pointercancel', releasePointer);
+    canvas.addEventListener('lostpointercapture', releasePointer);
+
+    canvas.addEventListener('keydown', event => {
+      if (!earthRoot) return;
+      const step = event.shiftKey ? 0.22 : 0.09;
+      if (event.key === 'ArrowLeft') earthRoot.rotation.y -= step;
+      else if (event.key === 'ArrowRight') earthRoot.rotation.y += step;
+      else if (event.key === 'ArrowUp') earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x - step, -0.52, 0.52);
+      else if (event.key === 'ArrowDown') earthRoot.rotation.x = THREE.MathUtils.clamp(earthRoot.rotation.x + step, -0.52, 0.52);
+      else return;
+      event.preventDefault();
+      renderOnce();
+    });
+
+    window.addEventListener('resize', resize, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+      if (isVisible) startLoop();
+      else stopLoop();
+    });
+
+    window.addEventListener('pagehide', stopLoop, { once: true });
   </script>
 </body>
 </html>
